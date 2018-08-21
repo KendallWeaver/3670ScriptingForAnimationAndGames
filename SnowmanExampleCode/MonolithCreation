@@ -1,0 +1,53 @@
+// Creates The Left Part of the Monolith 
+polyCube -w 1 -h 1 -d 1 -sx 1 -sy 1 -sz 1 -ax 0 1 0 -cuv 4 -ch 1 -name "Monolith_Left" ;
+// Selects the Monolith and adjusts it by resizing it and moving it
+select Monolith_Left ;
+scale -r 3.22 10.886 3.22 ;
+move -r -4.994 5.255 0 ;
+//Selects the bottom portion of the slab and expands it
+select -r Monolith_Left.e[0] ;
+select -add Monolith_Left.e[0] ;
+select -tgl Monolith_Left.e[11] ;
+select -add Monolith_Left.e[11] ;
+select -tgl Monolith_Left.e[3] ;
+select -add Monolith_Left.e[3] ;
+select -tgl Monolith_Left.e[10] ;
+select -add Monolith_Left.e[10] ;
+scale -r -p -0.994cm -0.188cm 0cm 1.455422 1.455422 1.455422 ;
+move -r 1.602612 0 0 ;
+// Creates the Right Part of the Monolith
+polyCube -w 1 -h 1 -d 1 -sx 1 -sy 1 -sz 1 -ax 0 1 0 -cuv 4 -ch 1 -name "Monolith_Right" ;
+// Selects the bottom of this slab and resizes and moves it
+select Monolith_Right ;
+scale -r 3.22 10.886 3.22 ;
+move -r 4.994 5.255 0 ;
+// Selects the bottom portion again and expands it slightly
+select -r Monolith_Right.e[0] ;
+select -add Monolith_Right.e[0] ;
+select -tgl Monolith_Right.e[11] ;
+select -add Monolith_Right.e[11] ;
+select -tgl Monolith_Right.e[3] ;
+select -add Monolith_Right.e[3] ;
+select -tgl Monolith_Right.e[10] ;
+select -add Monolith_Right.e[10] ;
+scale -r -p 5.148401cm -0.188cm 0cm 1.255422 1.255422 1.255422 ;
+//Creates the Middle, Top Slab
+polyCube -w 1 -h 1 -d 1 -sx 1 -sy 1 -sz 1 -ax 0 1 0 -cuv 4 -ch 1 -name "Monolith_Top" ;
+//Selects the Top Part and resizes it
+select Monolith_Top ;
+scale -r 16.19 3.312 4.986 ;
+move -r 0 12.237 0 ;
+// Selects portions of edges of the top slab and moves it
+select -r Monolith_Top ;
+select -r Monolith_Top.e[6] ;
+move -r 0 0.546549 0 ;
+select -r Monolith_Top.e[11] ;
+move -r 0.397275 0 0 ;
+select -add Monolith_Top.e[11] ;
+select -r Monolith_Top.e[2] ;
+select -tgl Monolith_Top.e[1] ;`
+scale -r -p 0cm 14.166275cm 0cm 1 1 0.867012 ;
+// Selects inner edge of left slab and moves it
+select -r Monolith_Left ;
+select -r Monolith_Left.e[5] ;
+move -r -0.47427 0 0 ;
