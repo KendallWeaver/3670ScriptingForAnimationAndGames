@@ -1,0 +1,8 @@
+polySphere -radius 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1 -name "Snowman_Base";
+select Snowman_Base ;
+scale -r 5.576423 5.576423 5.576423 ;
+move -r 0 4.594625 0 ;
+polySphere -radius 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1 -name "Snowman_Head";
+select Snowman_Head ;
+move -r 0 12 0 ;
+scale -r 4 4 4 ;
