@@ -1,0 +1,68 @@
+/*string $selection[]; 
+//All of maya can access this now
+
+//The local scope; only accessible to those in the curly braces
+//Similar to private variable to a public one
+{
+    string $names[];
+}
+print $names;*/
+//When going over different statements you can use, Clayton went over the 'for' loop
+//remember what += can do (increment)
+//for (int$i=0, $i<0, $i++ (I THINK??? I CANT READ) )
+//For in loop below
+{
+    string $names[] = {"Kyle", "Alexa", "Sam", "Spencer"}; 
+    //Where $student is, you can put any variable there. It's assigning it. It's a variable we just barely created.
+    for ($student in $names) {
+        print ("Wake up " + $student + "!\n");
+        //\n is a new line
+    }
+    
+    //compared to a for loop
+    //this establishes a counter and increments it.
+    //the middle part is like saying "if i is less than the number of names in the array, it will loop
+    for($i=0; $i<size($names); $i++) {
+        string $student;
+        $student = $names[$i];
+        print ("Wake up " + $student + "!\n");
+    }
+    //Switch statements are like a big if else statement
+    //needs a case and a default
+    //probably worth looking up or asking Clayton
+    
+    //Do while 
+    //while ($i<10)
+    //{ do something in your code and then increment it at the end like i++ }
+    
+}
+//Functions are called Procedures
+    /*
+    Maya shortens it to proc
+    */
+    //if you're creating a control script, add the global. it's usually unecessary
+    //makes it accessible outside of the script
+    
+//<global> proc <type> name (parameter) {}
+//The type statement is only if you are returning a value
+global proc nameCaller (string $person){
+    string $insults[] = {"butthead", "torb main", "kyle pinkjam", "scumbag"};
+    //This is random number. It's naturally as a float
+    int $index = rand(4);
+    print($person + " is a " + $insults[$index] + "!\n"); 
+}
+
+//This is how you call Function/Procedure
+//This goes after it's called because it was established earlier in the code. 
+//It's like it would have been called early but 
+nameCaller("Devin");
+
+// ls -selection;
+//will return a list of everything
+// ` ` will instruct Maya to assign it back 
+
+//it will list everything you have selected in maya. it's assigning it back to the $sels variable.
+string $sels[] = `ls -selection`;
+print $sels;
+
+//rand (A, B) is creating a range of variables. The result will be inbetween A and B
