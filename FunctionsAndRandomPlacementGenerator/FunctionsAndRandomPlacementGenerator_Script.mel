@@ -1,0 +1,196 @@
+global proc string[] CreateDomino() {
+    polyCube -w 4 -h 10 -d 1 -sx 2 -sy 5 -sz 1 -ax 0 1 0 -cuv 4 -ch 1 -name "Block";
+    move -r 0 5 0;
+    string $topDots[];
+    string $lowerDots[];
+    string $sels[];
+    string $lowSels[];
+    string $selections[];
+    int $topNumber = rand (1, 5);
+    int $bottomNumber = rand (1, 5);
+    if($topNumber == 1){
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        rotate -r -os -fo 90 0 0 ;
+        move -r 0 8 0 ;
+        $sels = `ls -selection`;
+        $topDots[0] = $sels[0] ;
+        print $topDots;
+    }
+    if($bottomNumber == 1){
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        rotate -r -os -fo 90 0 0 ;
+        move -r 0 2 0 ;
+        $lowSels = `ls -selection`;
+        $lowerDots[0] = $lowSels[0] ;
+    }
+    if($topNumber == 2){
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $sels = `ls -selection`;
+        $topDots[0] = $sels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r -1 9 0 ;
+        duplicate -rr;
+        $sels = `ls -selection`;
+        $topDots[1] = $sels[0] ;
+        move -r 2 -2 0 ;
+    }
+    if($bottomNumber == 2){
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $lowSels = `ls -selection`;
+        $lowerDots[0] = $lowSels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r -1 3 0 ;
+        duplicate -rr;
+        $lowSels = `ls -selection`;
+        $lowerDots[1] = $lowSels[0] ;
+        move -r 2 -2 0 ;
+    }
+    if($topNumber == 3){
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $sels = `ls -selection`;
+        $topDots[0] = $sels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r -1 9 0 ;
+        duplicate -rr;
+        $sels = `ls -selection`;
+        $topDots[1] = $sels[0] ;
+        move -r 2 -2 0 ;
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $sels = `ls -selection`;
+        $topDots[2] = $sels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r 0 8 0 ;
+    }
+    if($bottomNumber == 3){
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $lowSels = `ls -selection`;
+        $lowerDots[0] = $lowSels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r -1 3 0 ;
+        duplicate -rr;
+        $lowSels = `ls -selection`;
+        $lowerDots[1] = $lowSels[0] ;
+        move -r 2 -2 0 ;
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $lowSels = `ls -selection`;
+        $lowerDots[2] = $lowSels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r 0 2 0 ;
+    }
+    if($topNumber == 4){
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $sels = `ls -selection`;
+        $topDots[0] = $sels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r -1 9 0 ;
+        duplicate -rr;if(size($topDots) == 0 && size($lowerDots) == 0){
+        select "Block";
+        string $selections[] = `ls -selection`;
+    }
+        $sels = `ls -selection`;
+        $topDots[1] = $sels[0] ;
+        move -r 0 -2 0 ;
+        duplicate -rr;
+        $sels = `ls -selection`;
+        $topDots[2] = $sels[0] ;
+        move -r 2 0 0 ;
+        duplicate -rr;
+        $sels = `ls -selection`;
+        $topDots[3] = $sels[0] ;
+        move -r 0 2 0 ;
+    }
+    if($bottomNumber == 4){
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $lowSels = `ls -selection`;
+        $lowerDots[0] = $lowSels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r -1 3 0 ;
+        duplicate -rr;
+        $lowSels = `ls -selection`;
+        $lowerDots[1] = $lowSels[0] ;
+        move -r 0 -2 0 ;
+        duplicate -rr;
+        $lowSels = `ls -selection`;
+        $lowerDots[2] = $lowSels[0] ;
+        move -r 2 0 0 ;
+        duplicate -rr;
+        $lowSels = `ls -selection`;
+        $lowerDots[3] = $lowSels[0] ;
+        move -r 0 2 0 ;
+    }
+    if($topNumber == 5){
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $sels = `ls -selection`;
+        $topDots[0] = $sels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r -1 9 0 ;
+        duplicate -rr;
+        $sels = `ls -selection`;
+        $topDots[1] = $sels[0] ;
+        move -r 0 -2 0 ;
+        duplicate -rr;
+        $sels = `ls -selection`;
+        $topDots[2] = $sels[0] ;
+        move -r 2 0 0 ;
+        duplicate -rr;
+        $sels = `ls -selection`;
+        $topDots[3] = $sels[0] ;
+        move -r 0 2 0 ;
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $sels = `ls -selection`;
+        $topDots[4] = $sels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r 0 8 0 ;
+    }
+    if($bottomNumber == 5){
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $lowSels = `ls -selection`;
+        $lowerDots[0] = $lowSels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r -1 3 0 ;
+        duplicate -rr;
+        $lowSels = `ls -selection`;
+        $lowerDots[1] = $lowSels[0] ;
+        move -r 0 -2 0 ;
+        duplicate -rr;
+        $lowSels = `ls -selection`;
+        $lowerDots[2] = $lowSels[0] ;
+        move -r 2 0 0 ;
+        duplicate -rr;
+        $lowSels = `ls -selection`;
+        $lowerDots[3] = $lowSels[0] ;
+        move -r 0 2 0 ;
+        polyCylinder -radius .5 -h 1.2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+        $lowSels = `ls -selection`;
+        $lowerDots[4] = $lowSels[0] ;
+        rotate -r -os -fo 90 0 0 ;
+        move -r 0 2 0 ;
+    }
+    select -clear;
+    polyUnite -ch 1 -mergeUVSets 1 -centerPivot -name "Domino" $topDots $lowerDots "Block";
+    $selections = `ls -selection`;
+    delete -constructionHistory $selections;
+    return $selections;
+
+}
+
+CreateDomino();
+
+global proc DuplicateDominos(){
+    //string $obj[] = `CreateDomino`;
+    int $randNum = rand (7, 15); //assigns a random number
+   
+    //this will duplicate the object a number of times compared to the random number that was just generated. 
+    for ($i=0; $i < $randNum; $i++){
+        string $obj[] = `CreateDomino`;
+        int $xPosition = rand(-7, 7);
+        int $zPosition = rand(-25, 25);
+        move -r $xPosition 0 $zPosition;
+        //I commented this code out so that the tiles are more random
+        /*duplicate -rr $obj;
+        move -r $xPosition 0 $zPosition; */
+        select -clear;
+        }
+}
+
+DuplicateDominos();

@@ -1,0 +1,52 @@
+//Command Tab > Show Tool Tip Help (or) Command Completion
+//This seems useful to understand how MEL works 
+// the curly braces help seperate the code so the variables can be changed if necessary (?)
+/*{
+string $stickyPart[] = `polySphere -r 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 - ch 1`;
+//you can specify what object to move at the end of the command (you can see this in the Reference Doc)
+move -r -os -wd 0 5.0 0 $stickyPart[0];
+string $stick[] = `polyCylinder -r .1 -h 5 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1`;
+move -r -os -wd 0 2.5 0 $stick[0];
+//The item that will be in index 0 is the last object that was created.
+//So if we ran the polyCylinder code 30 times, pCylinder30 would be at index 0
+}*/
+
+//This will only define the function. it won't run the code. 
+global proc string Sucker() {
+    //Another way to define the object into the string array
+    string $objects[]; //contain list of transform objects
+    
+    polySphere -r 1 -sx 20 -sy 20 -ax 0 1 0 -cuv 2 - ch 1;
+    string $sels[] = `ls -selection`; //contains a list of sels
+    $objects[0] = $sels [0];
+    
+    polyCylinder -r .1 -h 5 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+    $sels = `ls -selection`; //contains a list of sels
+    $objects[1] = $sels [0];
+    
+    move -r -os -wd 0 5.0 0 $objects[0];
+    move -r -os -wd 0 2.5 0 $objects[1];
+    
+    $objects = `polyUnite -ch 1 -mergeUVSets 1 -centerPivot -name "Sucker" $objects`;
+    
+    delete -ch $objects;
+    
+    return $objects[0];
+    }
+
+//This will actually run it.
+//Sucker();
+
+//Since we are just transforming, we don't need a return value
+global proc DuplicateSuckers() {
+    string $obj = `Sucker`;
+    int $randNum = rand (1, 10); //assigns a random number
+    
+    //this will duplicate the object a number of times compared to the random number that was just generated. 
+    for ($i=0; $i < $randNum; $i++){
+        duplicate -rr $obj;
+    }
+    print ("Duplicated " + $obj + " " + $randNum + " times!");
+}
+
+DuplicateSuckers();
