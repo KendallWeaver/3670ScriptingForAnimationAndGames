@@ -183,7 +183,7 @@ global proc DuplicateDominos(){
     //this will duplicate the object a number of times compared to the random number that was just generated. 
     for ($i=0; $i < $randNum; $i++){
         string $obj[] = `CreateDomino`;
-        int $xPosition = rand(-7, 7);
+        int $xPosition = rand(-7, 10);
         int $zPosition = rand(-25, 25);
         move -r $xPosition 0 $zPosition;
         //I commented this code out so that the tiles are more random
