@@ -1,0 +1,13 @@
+global proc DuplicateObject(int $duplicateNumber, int $xRange, int $zRange){
+    string $selection [] = `ls -selection`;
+    //this will duplicate the object a number of times compared to the random number that was given as a parameter
+    for ($i=0; $i < $duplicateNumber; $i++){
+        select $selection;
+        duplicate $selection;
+        float $xPosition = rand(-($xRange), $xRange);
+        float $zPosition = rand(-($zRange), $zRange);
+        move -r $xPosition 0 $zPosition;
+        }
+}
+
+DuplicateObject(10, 15, 25);
