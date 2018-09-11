@@ -1,11 +1,10 @@
 global proc Rename(string $input[])
 {
     string $selection[] = `ls -selection -flatten`;
-    print $selection;
-
+    string $nameConvention = ("name_#_nodeType"); //template that will be tokenized
+    
     for($i=0; $i<size($selection); $i++)
     {
-        //print ($selection[$i] + " found!");
         int $numberSize = `tokenize $selection[$i] $input`;
         rename $input ("tail_" + $i + "_");
     }

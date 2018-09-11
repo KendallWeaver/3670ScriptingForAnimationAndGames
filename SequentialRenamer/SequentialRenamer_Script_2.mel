@@ -1,0 +1,21 @@
+global proc Rename(string $inputName, string $inputType)
+{
+    string $selection[] = `ls -selection -flatten`;
+    string $nameConvention = ("name_#_nodeType"); //template that will be tokenized
+    string $input[]; //Kind of a buffer; helps parse info to where it needs to go 
+    int $namingNumber = 1; //Starts at 1; can be used to help name the number of joints
+    tokenize $nameConvention "_" $input;
+    
+    //print $selection;    used to test if the selection was working
+    for($i=0; $i<size($selection); $i++)
+    {
+        $input[0] = $inputName;
+        $input[1] = $i; //i will change, thus helping the naming convention
+        $input[2] = $inputType;
+        string $actualName = $input[0] + "_" + $input[1] + "_" + $input[2];
+        //print $actualName;    used to make use the string was correct
+        rename $selection[$i] $actualName;    //Each index will be renamed based on i & where it is in the array
+    }
+}
+
+Rename("tail", "joint");
