@@ -1,0 +1,44 @@
+/* function procedure Rename (string "name_##_suffix") at the very least (something similar, at least)
+it will need to number it like 01, 02, 03, and so on. 
+the procedure has 1 parameter, apparently. 
+
+"Use MEL that can rename CURRENT selections into sequential order based on input"
+
+He created a joint chain and renaimed it 
+
+He had a tool where he could input what he wanted it to be called, applied it, 
+and the numerical sequence was applied to the rest of it
+
+so all the joints after "tail_1" became things like "tail_2", "tail_3"
+*/
+
+rename |joint1 "tail_1" ;
+nodeType tail_1;    //tells what type the thing is. in this case, it should say that tail_1 is a joint.
+
+/*the basics of the script you're making is string manipulation.
+It can be done in an array. 
+
+name_##_nodeType
+
+name could be assigned to a $var
+
+nodeType could be assigned to a $var
+
+you could have a selection array that will loop through it 
+    concatenate strings adding incremending number
+
+the ## should be replaced with a number
+it's important to count how many of these there are. 
+
+the first thing you should do is parse the string and split it up
+    $i=1 = format to match the number of digits
+
+once you concatenate the strings and increment the number, then you should be able to rename it.
+*/
+
+//tokenize is good command to split the strings
+//startsWith and endsWith
+//subsitute could be good for replacing a character with a number
+//substring could be good?
+//strip, match, and compare?
+//look up in number padding
