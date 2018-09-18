@@ -2,7 +2,7 @@ global proc Rename(string $inputName)
 {
     string $selection[] = `ls -selection -flatten`;
     string $input[]; //Kind of a buffer; helps parse info to where it needs to go 
-    tokenize $inputName "##" $input;
+    tokenize $inputName "#" $input;
     print $input;    // input has two arguments; 0 = tail_ and _joint
     
     int $lengthNum = 10;

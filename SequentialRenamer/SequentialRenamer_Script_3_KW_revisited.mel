@@ -1,0 +1,33 @@
+global proc Rename(string $inputName)
+{
+    /* For Testing Purposes
+    string $inputName = "tail_##_joint";
+    */
+    string $selection[] = `ls -selection -flatten`;    
+    string $input[]; //Kind of a buffer; helps parse info to where it needs to go 
+    string $numHash;    //Number of Hashtags
+    string $sizeOfI;    // used to cast i
+
+    tokenize $inputName "#" $input;
+    // input has two arguments; 0 = tail_ and _joint
+    
+    // This creates the variable of how many #s there are
+    int $numPadding = size($inputName) - (size($input[0]) + size($input[1])); 
+        
+    for($i=0; $i<size($selection); $i++)
+    {
+        $sizeOfI = $i;
+        // Changed i variable to j so the script doesn't mix them together
+        // The number of #s will be subtracted by the number of digits i has, thus making room for the actual number
+        for ($j=0; $j<($numPadding - size($sizeOfI)); $j++)
+        {
+           $numHash = ($numHash + "0");
+        } 
+        string $actualName = $input[0] + ($numHash +$i) + $input[1] ;
+        rename $selection[$i] $actualName;
+        $numHash = "";    // Reset the string so it isn't adding several 0s every time
+    }
+}
+
+//Code will officially work with any number of #
+Rename("tail_##_joint");
