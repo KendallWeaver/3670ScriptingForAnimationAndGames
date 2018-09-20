@@ -1,0 +1,63 @@
+// Exercise: Center Locator Tool
+/*
+We need to select objects (ls command)
+We need to find the combined center (x,y,z orientation?)
+Create a locator (spaceLocator)
+Move the locator (move command / xform command)
+    xform will set a very... set location?
+Get and set the orientation (because you'll have multiple objects)
+
+Clayton will try to get the center of a bounding box to do this script
+
+Something about a cluster object, I couldn't tell and a light red marker on a white board is kind of hard to read. 
+*/
+
+global proc string CenterLocator ()    // Procedure returns a string
+{
+    string $selection[] = `ls -selection`;    // An array for the selection
+    string $temp[] = `duplicate -rr`;    // Duplicate entire selection. We're doing this because of an error message we got ("only one object allowed for a query")
+    
+    if (size($temp) > 1)    //Put it in an array so it runs only if there's more than one object
+    {
+    $temp = `polyUnite $temp`;    // This should unite all the objects
+    }
+    
+    //When it comes to xform, -absolute (-a) and -relative (-r) is related to world space and object/local space
+    //-scalePivot and -rotatePivot is related to the pivot point
+    //-pivots changes both pivots
+    //-zeroTransformPivot can make everything zero
+    //the bounding box command will take the extent of the selection and make a bounding box around it
+        //-boundingBoxInvisible
+            //Returns the bounding box of objects, including boxes of all children. return values are xmin ymin zmin xmax ymax zmax
+            
+        //You'll want to use -boundingBox flag, because it doesn't include invisible children. but it's pretty similar
+            
+            //Think midpoint. If you have a position of two points, so you take the larger point and add the min, then divide by 2
+            //In 3D, you do this one at a time.
+            
+    float $bbPos[];    // Bounding Box Position array
+    $bbPos = `xform -q -boundingBox $temp`;	//-q means that you want to query the command; you're searching for it. -e means you want to edit it.
+    // the last flag should be your objects, in our case, the objects that were combined and duplicated, because of the error we got previously
+    
+    // we printed $bbPos and it worked
+    
+    //we need to delete the temporary locator
+    delete -constructionHistory $temp[0];    // This is to help clean up things because it's a mess, like in the outliner. 
+               //You have to do it to the first index because of how the array is built
+    delete $temp[0];     // We can do this now because we've saved the boundingBox values in $bbPos
+    
+    float $xPos, $yPos, $zPos;    // apparently you can initialize multiple variables in one line
+    $xPos = ($bbPos[0]+$bbPos[3]) / 2;    // Index 0 and 3 is xmin and xmax
+    $yPos = ($bbPos[1]+$bbPos[4]) / 2;    // Index 1 and 4 is ymin and xmax
+    $zPos = ($bbPos[2]+$bbPos[5]) / 2;    // Index 2 and 5 is zmin and xmax
+    
+    string $loc [] = `spaceLocator -name "TempLocator" -position 0 0 0`;    //creates a locator; allows you to put it in space, however the pivot is different
+    //so you should first put the locator in and then move it
+    // spaceLocator returns an array
+    
+    xform -translation $xPos $yPos $zPos -worldSpace -absolute $loc[0];    //xform is to ensure it's in the right space, regardless of scale
+    
+    return $loc[0];    //output should tell you the name of the locator you've created. 
+}
+
+CenterLocator();

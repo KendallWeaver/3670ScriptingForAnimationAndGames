@@ -1,0 +1,88 @@
+// Make controls for joints
+// For each selection, a control should be made for each of them. (suffix end of _Ctrl)
+    //If that's the case, it sounds like we'll need to use tokenize.
+// If statement to compare if there is a selection and if there isn't
+    //If there isn't a selection, a control should be made at the origin.
+// There should be another function to color the controls
+    // This is gonna be the hard part since I don't know how to do this yet.
+// Other Functions in place to make the Curvese different shapes
+
+/* First line of code creates a NURBS circle, and the second one makes a square
+circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1; objectMoveCommand;
+nurbsSquare -c 0 0 0 -nr 0 1 0 -sl1 1 -sl2 1 -sps 1 -d 3 -ch 1 ; objectMoveCommand;
+
+It should be noted that a NURBS square seems to be a group of four separate NURBS, but a circle is just one
+*/
+
+// Sept 20: Code works to put controls around OBJECTS. If joints were done, the location of the curbs were not aligned
+
+global proc CreateCircleControl(string $inputName)
+{
+    // Similar Code was used in the last assignment, 
+    string $selection[] = `ls -selection -flatten`;    
+    string $input[]; //Kind of a buffer; helps parse info to where it needs to go 
+    string $numHash;    //Number of Hashtags
+    string $sizeOfI;    // used to cast i
+    
+    float $boxPosition[];    // We've used string arrays for so long; don't forget arrays can be numbers as well
+    
+    string $location[];
+    
+    float $xPosition, $yPosition, $zPosition;    // apparently you can initialize multiple variables in one line
+
+    tokenize $inputName "#" $input;
+    // input has two arguments; 0 = Arm_ and _Ctrl
+    
+    // This creates the variable of how many #s there are
+    int $numPadding = size($inputName) - (size($input[0]) + size($input[1])); 
+    
+    if (size($selection) > 0)    // If there was a selection, it will run this code. 
+    {
+        for($i=0; $i<size($selection); $i++)
+        {
+            $sizeOfI = $i;
+            // Changed i variable to j so the script doesn't mix them together
+            // The number of #s will be subtracted by the number of digits i has, thus making room for the actual number
+              
+            
+            // Gets the location of one of the objects in the selected array, learns it's position
+            $boxPosition = `xform -q -boundingBox $selection[$i]`;
+            
+            /* For Testing Purposes
+            print($boxPosition);
+            */    
+            // Set the Center Point 
+            $xPosition = ($boxPosition[0]+$boxPosition[3]) / 2;    // Index 0 and 3 is xmin and xmax
+            $yPosition = ($boxPosition[1]+$boxPosition[4]) / 2;    // Index 1 and 4 is ymin and xmax
+            $zPosition = ($boxPosition[2]+$boxPosition[5]) / 2;    // Index 2 and 5 is zmin and xmax
+            
+            /* For Testing Purposes
+            print($i + "Position in the X is" + $xPosition + "\n");
+            print($i + "Position in the X is" + $yPosition + "\n");
+            print($i + "Position in the X is" + $zPosition + "\n");
+            */
+            
+            // Taken from Previous assignment to make naming conventions easier
+            for ($j=0; $j<($numPadding - size($sizeOfI)); $j++)
+            {
+               $numHash = ($numHash + "0");
+            } 
+
+            string $actualName = $input[0] + ($numHash +$i) + $input[1] ;
+            
+            circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 2 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1 -name $actualName;
+            xform -translation $xPosition $yPosition $zPosition -worldSpace -absolute $actualName;    // Move curve to object
+            
+            parent $selection[$i] $actualName;    // Makes the nurbCurve the parent of the selected object
+            
+            $numHash = "";    // Reset the string so it isn't adding several 0s every time
+                      
+            
+        }
+    }else    // If there wasn't a selection, it should do this. 
+    {
+        circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1 -name "_Ctrl"; objectMoveCommand;
+    }
+}
+
+CreateCircleControl("Arm_##_Ctrl");
