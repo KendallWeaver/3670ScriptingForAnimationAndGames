@@ -1,0 +1,44 @@
+// Color Script Lecture
+/*
+ We're gonna need a color, string/value, control (?)
+ We need to enable overrides on "_Ctrl"
+ Set the color on the Ctrl to the color variable
+     We'll specify a color index
+*/
+
+// If you want to use it in another script, make sure it's in the "scipts" folder in the maya 
+// then in another script, put "source <ScriptName>" at the top. 
+
+global proc ColorControls (string $ctrl, int $color)    // Parameters is a string and a variable for the color
+{
+    // sets color index of the control
+    // By going into Maya and going into the Shape tab, from there he turned on "Enable Overrides" under the "drawing overrides" tab. 
+    // setAttr "nurbsCircleShape1.overrideEnable" 1;
+    // The important thing is nurbsCircleShape1.overrideColor
+    
+    //define string array for shapes
+    string $shapes[];
+    
+    // find the shape node[s] of $ctrl (we're doing it to the shape, not the object)
+    $shapes = `listRelatives -shapes $ctrl`;    // Query control and return all of the shapes, assigned to the array
+    
+    // We need to override on $shape
+    for ($shape in $shapes)
+    {
+        //We're gonna check to make sure the shape is actually a curve
+        if (`nodeType $shape` == "nurbsCurve")
+        {
+            // $shape is a string
+            setAttr ($shape + ".overrideEnabled") 1 ;    //you have to list the object.Attribute
+            
+            // We need to set $shape color to $color
+            setAttr ($shape + ".overrideColor") $color;
+        } else 
+        {
+            warning ("Selected objects is not a curve");
+        }
+    }   
+
+}
+
+ColorControls("nurbsCircle1", 18);
