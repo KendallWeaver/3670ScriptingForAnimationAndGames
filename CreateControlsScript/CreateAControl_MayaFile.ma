@@ -1,6 +1,6 @@
 //Maya ASCII 2018 scene
 //Name: CreateAControl_MayaFile.ma
-//Last modified: Thu, Sep 27, 2018 08:53:50 AM
+//Last modified: Thu, Sep 27, 2018 09:34:48 AM
 //Codeset: 1252
 requires maya "2018";
 requires "stereoCamera" "10.0";
@@ -15,14 +15,14 @@ fileInfo "license" "education";
 createNode transform -s -n "persp";
 	rename -uid "7A799F81-40E1-B048-B088-FBA391176321";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -4.0791497866125219 24.445475475440162 23.728731233255861 ;
-	setAttr ".r" -type "double3" -42.338352729614805 -4.2000000000108821 -1.9931994584566085e-16 ;
+	setAttr ".t" -type "double3" 12.702588344281985 20.564658463540574 24.794209743172082 ;
+	setAttr ".r" -type "double3" -30.338352729621807 23.799999999986955 0 ;
 createNode camera -s -n "perspShape" -p "persp";
 	rename -uid "8A315877-4C44-4C1A-6BB1-D1A3B19DD7DE";
 	setAttr -k off ".v" no;
 	setAttr ".pze" yes;
 	setAttr ".fl" 34.999999999999993;
-	setAttr ".coi" 32.517364571170631;
+	setAttr ".coi" 32.51736457117164;
 	setAttr ".imn" -type "string" "persp";
 	setAttr ".den" -type "string" "persp_depth";
 	setAttr ".man" -type "string" "persp_mask";
