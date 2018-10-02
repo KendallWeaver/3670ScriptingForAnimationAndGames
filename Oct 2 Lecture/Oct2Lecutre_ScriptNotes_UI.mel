@@ -1,0 +1,50 @@
+// Notes for UI
+// Maya uses UI like nodes \ it's important to keep track of names (it makes them accessible)
+// Heirarchy is extremely important
+
+// Maya has a number of different "Layouts" (layouts section in the command reference)
+// controls how many commands are displayed
+// columnLayout helps have buttons in a column
+// rowLayout is horizontal
+// they're pretty self explanatory
+
+/* I want yellow now
+You window HAS TO HAVE some form of layout
+*/
+
+//Maya tracks EVERYTHING so complex stuff could slow it
+// notice how when you make a window, buttons already are in the double digits
+// also, maya is already creating its own hierarchy
+// be explicite so that Maya doesn't guess
+
+/*    Basic bare bone script
+window;    // creates a window
+columnLayout -columnAttach "both" 5 -rowSpacing 10 -columnWidth 250;    // creates a column
+// windows and then layouts
+button;    //buttons are created as children to the current "window"
+button;
+button;
+showWindow;     // Show Window command HAS to be run
+*/
+
+if (`window -exists "claytonsWindow"`)
+{
+    deleteUI "claytonsWindow";    // you should have this so you don't open up multiple instances of the window
+}
+
+window -title "Clayton's Toolbox" "claytonsWindow";    // creates a window
+string $mColumn = `columnLayout -parent "claytonsWindow" -columnAttach "both" 5 -rowSpacing 10 -columnWidth 250`;    // creates a column
+// windows and then layouts
+button -parent $mColumn -label "Parent Group";    //buttons are created as children to the current "window"
+    // to run procedure, after the string, do something like -command "parentGroup()";
+        // The "" is for if you want parameters, but it still runs even with no parameters
+button -parent $mColumn -label "Create Ctrls";    // mColumn explicitely says who the parent is, leaving no guesswork
+button -parent $mColumn -label "Other Stuff";
+showWindow "claytonsWindow";     // Show Window command HAS to be run
+
+// Window command actually returns a string, so you can set it to a variable
+
+/*
+string $mainWindow = "claytonsWindow";
+$mainWindow = `window -title "Clayton's Toolbox" $mainWindow`;
+*/

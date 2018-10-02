@@ -1,0 +1,32 @@
+//We talked about how to group controls while also making sure the parenting works
+/*
+listRelatives -parent -fullPath "pSphere1";
+*/
+    // Full path will help grab the whole path/ all of the relatives
+    // result: |group2|group1
+    // if you take out the parent, it will explain the whole path to get to pSphereShape1
+    
+global proc parentGroup()
+{
+    string $sels[] = `ls -sl`;
+    
+    for ($sel in $sels)    // create a group for every item you've selected
+    {
+                
+        // store data to test if there's a parent
+        string $parent[] = `listRelatives -parent -fullPath $sel`;
+        
+        //create an empty group at the origin, match transforms, and then parent. 
+        
+        string $grp = `group -empty -name($sel + "_Grp")`;
+        matchTransform $grp $sel;
+        parent $sel $grp;
+        
+        if(size($parent) > 0)    // if the variable contains data, then the value is true
+        {
+            parent $grp $parent[0];      
+        }
+    }
+}
+
+parentGroup();
