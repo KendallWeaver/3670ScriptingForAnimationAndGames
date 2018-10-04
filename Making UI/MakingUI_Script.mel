@@ -1,0 +1,109 @@
+// IMPORTANT: Executing windows is found at the bottom of the code. Don't be alarmed if nothing runs; it's commented out
+
+//create window for the Random Generator script
+global proc RandomGeneratorUI()
+{
+    
+    string $mainWindow = "RandomPlacementWindow";
+    
+    if(`window -exists $mainWindow`)
+        deleteUI $mainWindow;
+        
+    $mainWindow = `window -title "Random Placement Generator" $mainWindow`;
+    
+    //create a window, have a label with "number of duplicates, a field that accepts an Int,
+    // a range of floats, and a button to do it
+    
+    // Important parts:
+    /*
+    Window, Layout, Field (controls: intField, FloatField, buttons)
+    Range values, 
+    command to call the function
+    */
+
+
+    string $mainCol = `columnLayout -parent $mainWindow -adjustableColumn 1 -rowSpacing 12`;
+    
+    //first row
+    string $dupRowLayout = `rowLayout -parent $mainCol -numberOfColumns 3 -columnAlign 1 "right" -columnAttach 1 "left" 30 -columnAttach 2 "left" 10 -columnAttach 3 "both" 10`;
+    text -parent $dupRowLayout -label "Duplicate";
+    string $dupIntField = `intField -parent $dupRowLayout -minValue 1 -maxValue 25 -value 7`;    // catching the name of the control so we can query later; that's why its a string
+    //Slider code. Put it in once you learn how to make the two int fields relate to each other
+    //string $dupIntSlider = `intSlider -parent $dupRowLayout -step 1 -minValue 1 -maxValue 25 -value 7`;
+    
+    //Range Row Layout
+    string $rangeRowLayout = `rowLayout -parent $mainCol -numberOfColumns 4 -columnAlign 1 "right" -columnAttach 1 "left" 45 -columnAttach 2 "both" 10 -columnAttach 3 "both" 10 -columnAttach 4 "both" 10`;
+    text -parent $rangeRowLayout -label "Range";
+    //In my random generator script, i actually used int values instead of float values. I will change it accordingly
+    string $xRange = `intField -parent $rangeRowLayout -value 0`;
+    //In the orginal number generator script I made, i didn't use y values, because they were dominos.
+    //string $yRange = `floatField -parent $rangeRowLayout -value 0`;
+    string $zRange = `intField -parent $rangeRowLayout -value 0`;
+    
+    //create button
+    string $button = `button -parent $mainCol -label "Generate"` ;	//You don't have to specify a new layout for it; when you specify a button, it puts it in a new row
+    
+    showWindow $mainWindow;
+}
+
+
+//create window for The Renaming Script
+
+global proc RenamerUI()
+{
+    string $mainWindow = "RenamerWindow";
+    if(`window -exists $mainWindow`)
+        deleteUI $mainWindow;
+        
+    $mainWindow = `window -title "Rename Object(s)" $mainWindow`;
+    
+    string $mainCol = `columnLayout -parent $mainWindow -adjustableColumn 2 -rowSpacing 12`;
+    
+    string $nameRow = `rowLayout -parent $mainCol -numberOfColumns 2 -columnAttach 1 "left" 45 -columnAttach 2 "both" 10`;
+    text -parent $nameRow -label "Name (ie: arm_#_joint)";
+    string $renameString = `textField`;
+    
+    //I wonder if there's a way to have 3 text fields that can be converted into 1 string
+    
+    string $button = `button -parent $mainCol -label "Rename"` ;
+    
+    showWindow $mainWindow;
+}
+
+//create window for Creating Control Script
+global proc CreateControlUI()
+{
+    string $mainWindow = "CreatControlWindow";
+    if(`window -exists $mainWindow`)
+        deleteUI $mainWindow;
+        
+    $mainWindow = `window -title "Create Controls" $mainWindow`;
+    
+    string $mainCol = `columnLayout -parent $mainWindow -adjustableColumn 1 -rowSpacing 12`;
+    
+    string $shapeOptionRow = `rowLayout -parent $mainCol -numberOfColumns 4 -columnAttach 1 "left" 45 -columnAttach 2 "both" 10 -columnAttach 3 "both" 10 -columnAttach 4 "both" 10`;
+    text -parent $shapeOptionRow -label "Shape";
+    string $radioButtons = `radioCollection -parent $shapeOptionRow`;
+    string $circleButton, $hourglassButton, $squareButton;
+    $circleButton = `radioButton -parent $shapeOptionRow -label "Circle" `;
+    $hourglassButton = `radioButton -parent $shapeOptionRow -label "Hourglass" -select`;
+    $squareButton = `radioButton -parent $shapeOptionRow -label "Square"`;
+    
+    string $button = `button -parent $mainCol -label "Create Shapes"` ;
+    
+    string $controlColorRow = `rowLayout -parent $mainCol -numberOfColumns 2 -columnAttach 1 "left" 0 -columnAttach 2 "both" 10`;
+    string $colorIndex = `colorIndexSliderGrp -label "Change Color To" -min 0 -max 20 -value 14`;
+    
+    string $button = `button -parent $mainCol -label "Change Color"`;
+    
+    showWindow $mainWindow;
+}
+
+//Highlight the Row of what window you want to execute
+/*
+
+RandomGeneratorUI();
+RenamerUI();
+CreateControlUI();
+
+*/

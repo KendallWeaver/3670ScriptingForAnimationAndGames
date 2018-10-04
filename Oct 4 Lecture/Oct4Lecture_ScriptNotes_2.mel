@@ -1,0 +1,47 @@
+global proc GenerateUI()
+{
+    
+    string $mainWindow = "RandomePlacementWindow";
+    
+    if(`window -exists $mainWindow`)
+        deleteUI $mainWindow;
+        
+    $mainWindow = `window -title "Random Placement Generator" $mainWindow`;
+    
+    //create a window, have a label with "number of duplicates, a field that accepts an Int,
+    // a range of floats, and a button to do it
+    
+    // Important parts:
+    /*
+    Window, Layout, Field (controls: intField, FloatField, buttons)
+    Range values, 
+    command to call the function
+    */
+
+
+    string $mainCol = `columnLayout -parent $mainWindow -adjustableColumn 1`;
+    
+    //first row
+    string $dupRowLayout = `rowLayout -parent $mainCol -numberOfColumns 2 -adjustableColumn 2`;
+    text -parent $dupRowLayout -label "Duplicate";
+    string $dupIntField = `intField -parent $dupRowLayout -minValue 1 -maxValue 25 -value 7`;    // catching the name of the control so we can query later; that's why its a string
+    
+    //Range Row Layout
+    string $rangeRowLayout = `rowLayout -parent $mainCol -numberOfColumns 4`;
+    text -parent $rangeRowLayout -label "Range";
+    string $xRange = `floatField -parent $rangeRowLayout -value 0`;
+    string $yRange = `floatField -parent $rangeRowLayout -value 0`;
+    string $zRange = `floatField -parent $rangeRowLayout -value 0`;
+    
+    //create button
+    string $button = `button -parent $mainCol -label "Generate"` ;	//You don't have to specify a new layout for it; when you specify a button, it puts it in a new row
+    
+    showWindow $mainWindow;
+}
+
+GenerateUI();
+//apparently there's a way that you can prevent the window from resizing, if you want. \
+
+
+// For Tuesday, make UI windows for Renamer, Controls, and for the Random Number Generator
+// The UI doesn't necessarily have to be functional

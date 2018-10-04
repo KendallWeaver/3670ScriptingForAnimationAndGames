@@ -1,0 +1,63 @@
+// This was the code he had up at the beginning of the class. 
+/*
+string $mainWindow = "claytonsWindow";
+
+if (`window -exists $mainWindow`)
+    deleteUI $mainWindow;
+    
+$mainWindow = `window -title "Clayton's Toolbox" $mainWindow`;
+
+string $mColumn = `columnLayout -parent $mainWindow -columnAttach "both" 5 -rowSpacing 10 -columnWidth 250`;
+button -parent $mColumn -label "Parent Group" -command "parentGroup()";
+button -parent $mColumn -label "Create Ctrls";
+button -parent $mColumn -label "Other Stuff";
+
+showWindow $mainWindow;
+
+*/
+
+
+/*
+you could put in a checkBox
+floatField can be good if you want to type in a specific float value
+thereare intSlider and floatSlider
+radioButton are the circle; you select only 1 option
+text is, well, text
+
+for the button:
+    -enable can make it active and not active
+    -manage can help move the other columns up if one button is inactive. 
+    You may never really use those
+    
+floatField    
+    creates a field control that accepts float values and is bound by a minimum and a maximum value
+    will only accept float values
+        floatField;
+        floatField -editable false;    // cant edit this field    
+        floatField -minValue -10 -maxValue 10 -value 0;    //maximum value of 10, minimum value of -10
+        floatField -minValue 0 -maxValue 1 -precision 2;
+        floatField -minValue -1 -maxValue 1 -precision 4 -step .01;
+    this could be a good option for establishing a range
+    
+    inorder to get the value that the user inputs, you need to query it
+        which means, you should name it and store it, or track it with a variable.
+*/
+
+string $window = `window`;
+columnLayout;
+
+string $myFloatField = `floatField -minValue -10 -maxvalue 10 -value 0;
+
+showWindow $window;
+
+// floatField -edit -maxValue 20 $myFloatField;    //This is for editing the float value in the window
+    // you can edit things after they are created
+    
+float $value = `floatField -query -value $myFloatField`;    // query the value that the user can see
+
+global proc float FloatFieldQuery(string $controlName, string $attr)
+{
+        float $value = `floatField -q ("-" + $attr) $controlName`;
+        return $value;
+}
+FloatFieldQuery($myFloatField, "value");
