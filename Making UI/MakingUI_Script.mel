@@ -1,9 +1,38 @@
 // IMPORTANT: Executing windows is found at the bottom of the code. Don't be alarmed if nothing runs; it's commented out
 
+
+// personal note:
+// during next class, go through the code so you can organize it and also make notes of what's happening
+
+/*    Table of Contents 
+
+//UI Windows
+Line 24 - Random Generator UI Proc
+Line __ - Renamer UI Proc
+Line __ - Create Control UI Proc
+
+// Previous Scripts/Functions
+Line __ - Duplicate Object and Randomize it Proc
+Line __ - Rename Script
+Line __ - Create Circle Control
+Line __ - Square Circle Control
+Line __ - Hourglass Circle Control
+Line __ - Color Control
+
+// Get Values From UI Scripts
+Line __ - Get Text Field Value
+Line __ - Get Int Field Value
+Line __ - Get Button Value
+Line __ - Get Color Index Value
+
+// Where to Find Executed Window files
+Line __ - Commented Out UI
+
+*/
+
 //create window for the Random Generator script
 global proc RandomGeneratorUI()
 {
-    
     string $mainWindow = "RandomPlacementWindow";
     
     if(`window -exists $mainWindow`)
@@ -34,21 +63,47 @@ global proc RandomGeneratorUI()
     //Range Row Layout
     string $rangeRowLayout = `rowLayout -parent $mainCol -numberOfColumns 4 -columnAlign 1 "right" -columnAttach 1 "left" 45 -columnAttach 2 "both" 10 -columnAttach 3 "both" 10 -columnAttach 4 "both" 10`;
     text -parent $rangeRowLayout -label "Range";
-    //In my random generator script, i actually used int values instead of float values. I will change it accordingly
+    //In my random generator script, I actually used int values instead of float values. I will change it accordingly
     string $xRange = `intField -parent $rangeRowLayout -value 0`;
     //In the orginal number generator script I made, i didn't use y values, because they were dominos.
     //string $yRange = `floatField -parent $rangeRowLayout -value 0`;
     string $zRange = `intField -parent $rangeRowLayout -value 0`;
     
     //create button
-    string $button = `button -parent $mainCol -label "Generate"` ;	//You don't have to specify a new layout for it; when you specify a button, it puts it in a new row
+    string $button = `button -parent $mainCol -label "Generate" -command ("DuplicateObject(\"" + $dupIntField + "\", \"" + $xRange + "\", \"" + $zRange + "\")")`;
     
     showWindow $mainWindow;
 }
 
+// Duplicate and Random Generator Script
+global proc DuplicateObject(string $duplicateValue, string $xValue, string $zValue)
+{
+    
+    int $duplicateNumber = `GetIntFieldValue($duplicateValue)`;
+    int $xRange = `GetIntFieldValue($xValue)`;
+    int $zRange = `GetIntFieldValue($zValue)`;
+    
+    string $selection [] = `ls -selection`;
+
+    //this will duplicate the object a number of times compared to the random number that was given as a parameter
+    for ($i=0; $i<$duplicateNumber; $i++)
+    {
+        select $selection;
+        duplicate $selection;
+        float $xPosition = rand(-($xRange), $xRange);
+        float $zPosition = rand(-($zRange), $zRange);
+        move -r $xPosition 0 $zPosition;
+    }
+}
+
+
+global proc int GetIntFieldValue(string $control)
+{ 
+    int $value = `intField -query -value $control`;    // This will return a value
+    return $value;
+}
 
 //create window for The Renaming Script
-
 global proc RenamerUI()
 {
     string $mainWindow = "RenamerWindow";
@@ -65,9 +120,46 @@ global proc RenamerUI()
     
     //I wonder if there's a way to have 3 text fields that can be converted into 1 string
     
-    string $button = `button -parent $mainCol -label "Rename"` ;
+    string $button = `button -parent $mainCol -label "Rename" -command ("Rename(\"" + $renameString + "\")")` ;
     
     showWindow $mainWindow;
+}
+
+//Renaming Script
+global proc Rename(string $valueName)
+{
+    string $inputName = `GetTextFieldValue($valueName)`;
+    string $selection[] = `ls -selection -flatten`;    
+    string $input[]; //Kind of a buffer; helps parse info to where it needs to go 
+    string $numHash;    //Number of Hashtags
+    string $sizeOfI;    // used to cast i
+
+    tokenize $inputName "#" $input;
+    // input has two arguments; 0 = tail_ and _joint
+    
+    // This creates the variable of how many #s there are
+    int $numPadding = size($inputName) - (size($input[0]) + size($input[1])); 
+        
+    for($i=0; $i<size($selection); $i++)
+    {
+        $sizeOfI = $i;
+        // Changed i variable to j so the script doesn't mix them together
+        // The number of #s will be subtracted by the number of digits i has, thus making room for the actual number
+        for ($j=0; $j<($numPadding - size($sizeOfI)); $j++)
+        {
+           $numHash = ($numHash + "0");
+        } 
+        string $actualName = $input[0] + ($numHash +$i) + $input[1] ;
+        rename $selection[$i] $actualName;
+        $numHash = "";    // Reset the string so it isn't adding several 0s every time
+    }
+}
+
+//Get The Text Field that was inputted
+global proc string GetTextFieldValue(string $control)
+{  
+    string $value = `textField -query -text $control`;    // This will return a value
+    return $value;
 }
 
 //create window for Creating Control Script
@@ -89,14 +181,331 @@ global proc CreateControlUI()
     $hourglassButton = `radioButton -parent $shapeOptionRow -label "Hourglass" -select`;
     $squareButton = `radioButton -parent $shapeOptionRow -label "Square"`;
     
-    string $button = `button -parent $mainCol -label "Create Shapes"` ;
+    string $controlNameRow = `rowLayout -parent $mainCol -numberOfColumns 2 -columnAttach 1 "left" 45 -columnAttach 2 "both" 10`;
+    text -parent $controlNameRow -label "Name for Controls:";
+    string $controlNameString = `textField`;
+    
+    string $button1 = `button -parent $mainCol -label "Create Shapes" -command ("WhatIsRadio(\"" + $radioButtons + "\", \"" + $controlNameString + "\")")`;
     
     string $controlColorRow = `rowLayout -parent $mainCol -numberOfColumns 2 -columnAttach 1 "left" 0 -columnAttach 2 "both" 10`;
     string $colorIndex = `colorIndexSliderGrp -label "Change Color To" -min 0 -max 20 -value 14`;
     
-    string $button = `button -parent $mainCol -label "Change Color"`;
+    string $button2 = `button -parent $mainCol -label "Change Color" -command ("ColorControls(\"" + $colorIndex + "\")")`;
     
     showWindow $mainWindow;
+}
+
+global proc string GetRadioButton(string $radio)
+{
+    string $selected = `radioCollection -q -sl $radio`;
+    return `radioButton -q -label $selected`;
+}
+
+global proc WhatIsRadio(string $buttonName, string $ctrlName)
+{
+    string $radio = `GetRadioButton($buttonName)`;
+    string $nameInput = `GetTextFieldValue($ctrlName)`;
+    
+    if ($radio == "Circle")
+    {
+        CreateCircleControl($nameInput);
+    }
+    if ($radio == "Hourglass")
+    {
+        CreateHourglassControl($nameInput);
+    }    
+    if ($radio == "Square")
+    {
+        CreateSquareControl($nameInput);
+    }
+}
+
+//Create Controls and Color The Controls Script
+// Create Circle Control
+global proc CreateCircleControl(string $inputName)
+{
+    // Similar Code was used in the last assignment. Mainly used to help naming conventions, but now curves are created and renamed based on the input.
+    string $selection[] = `ls -selection -flatten`;    
+    string $input[]; //Kind of a buffer; helps parse info to where it needs to go 
+    string $numHash;    //Number of Hashtags
+    string $sizeOfI;    // used to cast i
+    
+    float $boxPosition[];    // We've used string arrays for so long; don't forget arrays can be numbers as well
+    
+    string $location[];
+    
+    float $xPosition, $yPosition, $zPosition;    // apparently you can initialize multiple variables in one line
+
+    tokenize $inputName "#" $input;
+    // input has two arguments; 0 = Arm_ and _Ctrl
+    
+    // This creates the variable of how many #s there are
+    int $numPadding = size($inputName) - (size($input[0]) + size($input[1])); 
+    
+    if (size($selection) > 0)    // If there was a selection, it will run this code. 
+    {
+        for($i=0; $i<size($selection); $i++)
+        {
+            $sizeOfI = $i;
+            // Changed i variable to j so the script doesn't mix them together
+            // The number of #s will be subtracted by the number of digits i has, thus making room for the actual number
+            
+            // Following gets the location of one of the objects in the selected array and learns it's position
+            /*NOTE: previous iteration used this code
+            //$boxPosition = `xform -q -boundingBox $selection[$i]`;
+            
+            However, I was actually able to find the center of the selected object with the following code. 
+            It worked for both joints and objects. Previously, the code only worked for objects.
+            The joints and controls never aligned with this method, even with trying to find the center subtracting the values of the bounding box
+            
+            -worldSpace refers to obviously the global space, and not the one local to the object
+            -translation returns three variables, which are where the selected object is. 
+            in short, it looks at the world space for the translation of the object.
+            */
+            $boxPosition = `xform -query -worldSpace -translation $selection[$i]`;
+            
+            /* For Testing Purposes
+            print($boxPosition);
+            */    
+            // Set the Center Point. Previously we used math to find the center, but it didn't work for joints. 
+            $xPosition = ($boxPosition[0]);    // Index 0 is the x value
+            $yPosition = ($boxPosition[1]);    // Index 1 is the y value
+            $zPosition = ($boxPosition[2]);    // Index 2 is the z value
+            
+            /* For Testing Purposes
+            print($i + "Position in the X is" + $xPosition + "\n");
+            print($i + "Position in the X is" + $yPosition + "\n");
+            print($i + "Position in the X is" + $zPosition + "\n");
+            */
+            
+            // Taken from Previous assignment to make naming conventions easier
+            for ($j=0; $j<($numPadding - size($sizeOfI)); $j++)
+            {
+               $numHash = ($numHash + "0");
+            } 
+
+            string $actualName = $input[0] + ($numHash +$i) + $input[1] ;
+            circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 2 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1 -name $actualName;
+            xform -translation $xPosition $yPosition $zPosition -worldSpace -absolute $actualName;    // Move curve to object
+            /* Removed code; used to previously parent controls to selected objects
+            //parent $selection[$i] $actualName;    // Makes the nurbCurve the parent of the selected object
+            */
+            $numHash = "";    // Reset the string so it isn't adding several 0s every time 
+        }
+    }else    // If there wasn't a selection, it should do this. 
+    {
+        circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1 -name "C_Ctrl"; objectMoveCommand;
+    }
+    select -cl;    // to clear selections to make creation easier. 
+}
+// Create Hourglass Controls
+global proc CreateHourglassControl(string $inputName)
+{
+    // Similar Code was used in the last assignment, 
+    string $selection[] = `ls -selection -flatten`;    
+    string $input[]; //Kind of a buffer; helps parse info to where it needs to go 
+    string $numHash;    //Number of Hashtags
+    string $sizeOfI;    // used to cast i
+    
+    float $boxPosition[];    // We've used string arrays for so long; don't forget arrays can be numbers as well
+    string $location[];
+    float $xPosition, $yPosition, $zPosition;    // apparently you can initialize multiple variables in one line
+
+    tokenize $inputName "#" $input;
+    // input has two arguments; 0 = Arm_ and _Ctrl
+    
+    // This creates the variable of how many #s there are
+    int $numPadding = size($inputName) - (size($input[0]) + size($input[1])); 
+    
+    if (size($selection) > 0)    // If there was a selection, it will run this code. 
+    {
+        for($i=0; $i<size($selection); $i++)
+        {
+            $sizeOfI = $i;
+            // Changed i variable to j so the script doesn't mix them together
+            // The number of #s will be subtracted by the number of digits i has, thus making room for the actual number
+
+            // Gets the location of one of the objects in the selected array, learns it's position
+            $boxPosition = `xform -query -worldSpace -translation $selection[$i]`;
+            
+            /* For Testing Purposes
+            print($boxPosition);
+            */    
+            // Sets Position
+            $xPosition = ($boxPosition[0]);    // Index 0 is the x value
+            $yPosition = ($boxPosition[1]);    // Index 1 is the y value
+            $zPosition = ($boxPosition[2]);    // Index 2 is the z value
+            
+            /* For Testing Purposes
+            print($i + "Position in the X is" + $xPosition + "\n");
+            print($i + "Position in the X is" + $yPosition + "\n");
+            print($i + "Position in the X is" + $zPosition + "\n");
+            */
+            
+            // Taken from Previous assignment to make naming conventions easier
+            for ($j=0; $j<($numPadding - size($sizeOfI)); $j++)
+            {
+               $numHash = ($numHash + "0");
+            } 
+
+            string $actualName = $input[0] + ($numHash +$i) + $input[1] ;
+            
+            circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 3 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1 -name $actualName;
+            // following code picks a point and moves it to give the cirve a different shape
+            select -r -sym ($actualName).cv[3] ;
+            move -r -smn -3 0 0 ;
+            select $actualName;
+            xform -translation $xPosition $yPosition $zPosition -worldSpace -absolute $actualName;    // Move curve to object
+            
+            /*Removed Code: parents object to the curve
+            //parent $selection[$i] $actualName;    // Makes the nurbCurve the parent of the selected object
+            */
+            $numHash = "";    // Reset the string so it isn't adding several 0s every time
+        }
+    }else    // If there wasn't a selection, it should do this. 
+    {
+        circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1 -name "H_Ctrl";
+        select -r -sym H_Ctrl.cv[3] ;
+        move -r -smn -1 0 0 ;
+    }
+    select -cl;
+}
+
+//Create Square Controls
+global proc CreateSquareControl(string $inputName)
+{
+    // Similar Code was used in the last assignment, 
+    string $selection[] = `ls -selection -flatten`;    
+    string $input[]; //Kind of a buffer; helps parse info to where it needs to go 
+    string $numHash;    //Number of Hashtags
+    string $sizeOfI;    // used to cast i
+    
+    float $boxPosition[];    // We've used string arrays for so long; don't forget arrays can be numbers as well
+    string $location[];  
+    float $xPosition, $yPosition, $zPosition;    // apparently you can initialize multiple variables in one line
+
+    tokenize $inputName "#" $input;
+    // input has two arguments; 0 = Arm_ and _Ctrl
+    
+    // This creates the variable of how many #s there are
+    int $numPadding = size($inputName) - (size($input[0]) + size($input[1])); 
+    
+    if (size($selection) > 0)    // If there was a selection, it will run this code. 
+    {
+        for($i=0; $i<size($selection); $i++)
+        {
+            $sizeOfI = $i;
+            // Changed i variable to j so the script doesn't mix them together
+            // The number of #s will be subtracted by the number of digits i has, thus making room for the actual number
+
+            // Gets the location of one of the objects in the selected array, learns it's position
+            $boxPosition = `xform -query -worldSpace -translation $selection[$i]`;
+            
+            /* For Testing Purposes
+            print($boxPosition);
+            */    
+            // Set the position into variables
+            $xPosition = ($boxPosition[0]);    // Index 0 is the x value
+            $yPosition = ($boxPosition[1]);    // Index 1 is the y value
+            $zPosition = ($boxPosition[2]);    // Index 2 is the z value
+            
+            /* For Testing Purposes
+            print($i + "Position in the X is" + $xPosition + "\n");
+            print($i + "Position in the X is" + $yPosition + "\n");
+            print($i + "Position in the X is" + $zPosition + "\n");
+            */
+            
+            // Taken from Previous assignment to make naming conventions easier
+            for ($j=0; $j<($numPadding - size($sizeOfI)); $j++)
+            {
+               $numHash = ($numHash + "0");
+            } 
+
+            string $actualName = $input[0] + ($numHash +$i) + $input[1] ;
+            
+            //Make a Nurbs Circle
+            circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 3 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1 -name $actualName;
+            //Moving the Points so it's more of a square shape
+            select -r -sym ($actualName).cv[7] ;
+            move -r -smn -1 0 0 ;
+            select -r -sym ($actualName).cv[5];
+            select -tgl -sym ($actualName).cv[1];
+            scale -r -p 0cm 0cm 0cm 1 1 0.652316 ;
+            select -cl;
+  
+            //Once the points are moved, we select the control so it can be moved in the right spot
+            select $actualName;
+            xform -translation $xPosition $yPosition $zPosition -worldSpace -absolute $actualName;    // Move curve to object
+            /*Removed code: parents object to the created curve
+            //parent $selection[$i] $actualName;    // Makes the nurbCurve the parent of the selected object
+            */
+            
+            $numHash = "";    // Reset the string so it isn't adding several 0s every time
+        }
+    }else    // If there wasn't a selection, it should do this. 
+    {
+             circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 3 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1 -name "S_Ctrl";
+             //Moving the Points so it's more of a square shape
+            select -r -sym S_Ctrl.cv[5];
+            select -tgl -sym S_Ctrl.cv[1];
+            scale -r -p 0cm 0cm 0cm 1 1 0.652316 ;
+            select -r -sym S_Ctrl.cv[7] ;
+            move -r -smn -1 0 0 ;
+    }
+    select -cl;
+}
+
+// Finds the value of the Color Index
+global proc int GetColorIndex (string $control)
+{
+    int $value = `colorIndexSliderGrp -query -value $control`;    // This will return a value
+    return $value;
+}
+
+//procedure for looping through selected controls. It initializes the other procedure, which is solely for changing colors.
+global proc ColorControls(string $colorIndexValue)
+{
+    int $colorIndex = `GetColorIndex($colorIndexValue)`;
+    $colorIndex = $colorIndex - 1;    // For some reason the index is different than what is displayed in the UI
+    string $selectedControls[] = `ls -sl`;
+    /*For Testing What's in the Selected Array
+    print ($selectedControls);
+    */
+    for ($select in $selectedControls)
+    {
+        string $controlName = $select;
+        ChangeColors($controlName, $colorIndex);
+    }
+}
+
+// Change Color of controls
+// it finds the shapes, checks if it's a curve, and then changes the color if it is. 
+global proc ChangeColors(string $controlName, int $colorIndex)
+{
+    // This code will actually change the colors. Derived from the Lecture notes on Sept 25    
+    //define string array for the shapes
+    string $shapes[];
+    
+    // find the shape node[s] of $controlName (we're doing it to the shape, not the object)
+    $shapes = `listRelatives -shapes $controlName`;
+    
+    // We need to override on $shape
+    for ($shape in $shapes)
+    {
+        //We're gonna check to make sure the shape is actually a curve
+        if (`nodeType $shape` == "nurbsCurve")
+        {
+            // $shape is a string
+            setAttr ($shape + ".overrideEnabled") 1 ;    //you have to list the object.Attribute
+            
+            // We need to set $shape color to $color
+            setAttr ($shape + ".overrideColor") $colorIndex;
+        }else        
+        {
+            print("Not A Control");
+        }
+    }   
+
 }
 
 //Highlight the Row of what window you want to execute

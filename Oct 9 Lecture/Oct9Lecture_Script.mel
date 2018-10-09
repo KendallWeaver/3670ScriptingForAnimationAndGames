@@ -1,0 +1,76 @@
+// source <ScriptName>
+    //This is usually located in Documents/Maya/scripts
+
+global proc GenerateUI()
+{
+    
+    string $mainWindow = "RandomPlacementWindow";
+    
+    if(`window -exists $mainWindow`)
+        deleteUI $mainWindow;
+        
+    $mainWindow = `window -title "Random Placement Generator" $mainWindow`;
+    string $mainCol = `columnLayout -parent $mainWindow -adjustableColumn 1`;
+    
+    //first row
+    string $dupRowLayout = `rowLayout -parent $mainCol -numberOfColumns 2 -adjustableColumn 2`;
+    text -parent $dupRowLayout -label "Duplicate";
+    string $dupIntField = `intField -parent $dupRowLayout -minValue 1 -maxValue 25 -value 7`;    // catching the name of the control so we can query later; that's why its a string
+    
+    //Range Row Layout
+    string $rangeRowLayout = `rowLayout -parent $mainCol -numberOfColumns 4`;
+    text -parent $rangeRowLayout -label "Range";
+    string $xRange = `floatField -parent $rangeRowLayout -value 0`;
+    string $yRange = `floatField -parent $rangeRowLayout -value 0`;
+    string $zRange = `floatField -parent $rangeRowLayout -value 0`;
+    
+    //create button
+    string $button = `button -parent $mainCol -label "Generate" -command ("MoveObj(\"" + $xRange + "\", \"" + $yRange + "\", \"" + $zRange + "\")")`;	
+    //You don't have to specify a new layout for it; when you specify a button, it puts it in a new row
+        // the function mentioned after -command will be the function where you can get the query
+        // when calling a function with parameters, it's important to put the entire things in quotes
+        // it's basically concatonating it 
+        
+        // ("MoveObj(\"" + $xRange + "\", \"" + $yRange + "\", \"" + $zRange + "\")")
+            // \ is saying you want to keep it in the string
+            // All the quotes is basically ending and starting up strings again
+    showWindow $mainWindow;
+}
+/*
+GenerateUI();
+*/
+
+
+/*    Example code to gather information:
+
+floatField -query -value $xRange
+
+Keep in mind, $xRange variable only exists in the proc so it can't be accessed unless it's in that code
+So how do you gather that data?
+*/
+
+
+global proc MoveObj(string $xName, string $yName, string $zName)    // These are the names of the control
+{
+    // Gets Selection
+    string $sels[] = `ls -selection`;
+    
+    //query values of float fields and assign to variables
+    float $xVal = `GetFloatFieldValue($xName)`;
+    print($xVal);    
+    float $yVal = `GetFloatFieldValue($yName)`;
+    float $zVal = `GetFloatFieldValue($zName)`;  
+      
+    move $xVal $yVal $zVal -relative $sels;    // this eventually will move the object once the data is extracted
+}
+
+
+global proc float GetFloatFieldValue(string $control)
+{
+    // The idea is that you can use this to get any floatField
+    // You'll need to have a generic function
+    
+    float $value = `floatField -query -value $control`;    // This will return a value
+    return $value;
+}
+GenerateUI();
