@@ -8,25 +8,27 @@
 
 //UI Windows
 Line 24 - Random Generator UI Proc
-Line __ - Renamer UI Proc
-Line __ - Create Control UI Proc
+Line 106 - Renamer UI Proc
+Line 166 - Create Control UI Proc
 
 // Previous Scripts/Functions
-Line __ - Duplicate Object and Randomize it Proc
-Line __ - Rename Script
-Line __ - Create Circle Control
-Line __ - Square Circle Control
-Line __ - Hourglass Circle Control
-Line __ - Color Control
+Line 78 - Duplicate Object and Randomize it
+Line 129 - Rename
+Line 232 - Create Circle Control
+Line 309 - Hourglass Circle Control
+Line 382 - Square Circle Control
+Line 473 - What Color the Control will be
+Line 490 - Change the Color of the Control
 
 // Get Values From UI Scripts
-Line __ - Get Text Field Value
-Line __ - Get Int Field Value
-Line __ - Get Button Value
-Line __ - Get Color Index Value
+Line 99 - Get Int Field Value
+Line 159 - Get Text Field Value
+Line 204 - Get Button Value
+Line 212 - What is the Radio Button String and what Procedure will it Run
+Line 466 - Get Color Index Value
 
 // Where to Find Executed Window files
-Line __ - Commented Out UI
+Line 522, 523, 524 - Execute and Run UI Windows
 
 */
 
@@ -34,7 +36,7 @@ Line __ - Commented Out UI
 global proc RandomGeneratorUI()
 {
     string $mainWindow = "RandomPlacementWindow";
-    
+    //deletes UI if it already exists
     if(`window -exists $mainWindow`)
         deleteUI $mainWindow;
         
@@ -49,7 +51,6 @@ global proc RandomGeneratorUI()
     Range values, 
     command to call the function
     */
-
 
     string $mainCol = `columnLayout -parent $mainWindow -adjustableColumn 1 -rowSpacing 12`;
     
@@ -96,7 +97,7 @@ global proc DuplicateObject(string $duplicateValue, string $xValue, string $zVal
     }
 }
 
-
+// This procedure will get an INT value from the UI window
 global proc int GetIntFieldValue(string $control)
 { 
     int $value = `intField -query -value $control`;    // This will return a value
@@ -114,6 +115,7 @@ global proc RenamerUI()
     
     string $mainCol = `columnLayout -parent $mainWindow -adjustableColumn 2 -rowSpacing 12`;
     
+    // Row where user can input the name they want the selected objects/joints to change to
     string $nameRow = `rowLayout -parent $mainCol -numberOfColumns 2 -columnAttach 1 "left" 45 -columnAttach 2 "both" 10`;
     text -parent $nameRow -label "Name (ie: arm_#_joint)";
     string $renameString = `textField`;
@@ -155,7 +157,7 @@ global proc Rename(string $valueName)
     }
 }
 
-//Get The Text Field that was inputted
+//Get The Text Field that was inputted in the UI window
 global proc string GetTextFieldValue(string $control)
 {  
     string $value = `textField -query -text $control`;    // This will return a value
@@ -173,6 +175,7 @@ global proc CreateControlUI()
     
     string $mainCol = `columnLayout -parent $mainWindow -adjustableColumn 1 -rowSpacing 12`;
     
+    // Row where you can select what shape of Controls that you want
     string $shapeOptionRow = `rowLayout -parent $mainCol -numberOfColumns 4 -columnAttach 1 "left" 45 -columnAttach 2 "both" 10 -columnAttach 3 "both" 10 -columnAttach 4 "both" 10`;
     text -parent $shapeOptionRow -label "Shape";
     string $radioButtons = `radioCollection -parent $shapeOptionRow`;
@@ -181,26 +184,32 @@ global proc CreateControlUI()
     $hourglassButton = `radioButton -parent $shapeOptionRow -label "Hourglass" -select`;
     $squareButton = `radioButton -parent $shapeOptionRow -label "Square"`;
     
+    // Row where you can say what you want the controls to be named. 
     string $controlNameRow = `rowLayout -parent $mainCol -numberOfColumns 2 -columnAttach 1 "left" 45 -columnAttach 2 "both" 10`;
-    text -parent $controlNameRow -label "Name for Controls:";
+    text -parent $controlNameRow -label "Name for Controls: (ie: arm_#_joint)";
     string $controlNameString = `textField`;
     
+    // Button Where command will be run 
     string $button1 = `button -parent $mainCol -label "Create Shapes" -command ("WhatIsRadio(\"" + $radioButtons + "\", \"" + $controlNameString + "\")")`;
     
+    // Row where you can change what color the controls will be
     string $controlColorRow = `rowLayout -parent $mainCol -numberOfColumns 2 -columnAttach 1 "left" 0 -columnAttach 2 "both" 10`;
     string $colorIndex = `colorIndexSliderGrp -label "Change Color To" -min 0 -max 20 -value 14`;
     
+    //Button to run scripts where the controls will change color
     string $button2 = `button -parent $mainCol -label "Change Color" -command ("ColorControls(\"" + $colorIndex + "\")")`;
     
     showWindow $mainWindow;
 }
 
+// Get the string that was selected in the Radio Collection in the Control UI
 global proc string GetRadioButton(string $radio)
 {
     string $selected = `radioCollection -q -sl $radio`;
     return `radioButton -q -label $selected`;
 }
 
+// This procedure will run a particular shape procedure based on what was selected in the Control UI
 global proc WhatIsRadio(string $buttonName, string $ctrlName)
 {
     string $radio = `GetRadioButton($buttonName)`;
@@ -220,7 +229,6 @@ global proc WhatIsRadio(string $buttonName, string $ctrlName)
     }
 }
 
-//Create Controls and Color The Controls Script
 // Create Circle Control
 global proc CreateCircleControl(string $inputName)
 {
@@ -509,10 +517,9 @@ global proc ChangeColors(string $controlName, int $colorIndex)
 }
 
 //Highlight the Row of what window you want to execute
-/*
+
 
 RandomGeneratorUI();
 RenamerUI();
 CreateControlUI();
 
-*/
