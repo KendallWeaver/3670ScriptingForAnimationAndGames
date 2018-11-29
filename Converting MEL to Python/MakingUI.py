@@ -79,7 +79,7 @@ def RenamerUI():
 	
 	#I wonder if there's a way to have 3 cmds.text fields that can be converted into 1 
 	
-	button = cmds.button(parent=mainCol, label="Rename")
+	button = cmds.button(parent=mainCol, label="Rename", command = lambda x: Rename())
 	
 	cmds.showWindow(mainWindow)
 
@@ -108,7 +108,7 @@ def CreateLocatorUI():
 # This seems to work like tokenize
 #'obj_#_joint'.partition('#')
 
-def Rename(inputName='name_###_joint'):
+def Rename(inputName='name_#_joint'):
 	selection = cmds.ls(selection=True, flatten=True)
 	
 	#Unlike MEL when you used "tokenize", you need to use partition in this case
