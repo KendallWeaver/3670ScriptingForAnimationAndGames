@@ -1,0 +1,39 @@
+------------
+INSTRUCTIONS
+------------
+
+1. Open "MyToolbox_KendallWeaver.py" in the Script Editor.
+2. Run the script. 
+3. The window that opens is the main Toolbox. Simply click on the Button of the script you want to run.
+	a. Random Placement Generator Script
+		1. Select the object(s) you want to duplicate.
+		2. In the Duplicate Field, type in how many duplicates you want to make.
+		3. In the Range Field, type in the range of where you want the duplicate objects to go. 
+			- The first field is the X Range, and the Second one is the Z Range. 
+			- The script will register the range you put in as a positive and negative Value
+				For Example, if you put in 10 in the X Range, it will understand you mean an X range of -10 and 10.
+		4. Once all your settings are complete, hit "Generate"   
+	b. Renamer Script
+		1. Select the object(s) you want to rename.
+		2. Type in the name you want.
+			- An example is given of what kind of naming convention will work.
+			- NOTE: Please use Hashtags in the naming field for the numbers. This is for numbering everything properly.
+				For example, if you selected 4 objects, by using the Hashtags, the script will increment the four objects accordingly.
+		3. Once you have typed the name you want the objects to have, hit "Rename".
+	c. Create Locator Script
+		1. Select the object(s) you will be using.
+		2. Hit the "Bounding Box" button if you want one locator in the center of all the selected objects
+		3. Hit the "Pivot Point" button if you want locators at the pivot point of ALL objects.
+	d. Make Joint Chain Script
+		1. Select the objects you want to make a Joint Chain out of.
+		2. Once you have selected your objects, hit "Make Joint Chain"
+	e. Make Controls and Change Their Color Script
+		1. Select the object(s) you want to put controls around.
+		2. Select what Shape of control you want (either Circle, Hourglass, Square)
+		3. Type in the name you want for the controls. There's an example given about what will work.
+			- If you forget to put in a name, the default name will be "controls#"
+		4. When these settings are correct, hit "Create Shapes"
+			- NOTE: The controls will default to the original control color. See next steps if you want to change it.
+		5. If you want to change the color, first select the controls you want to color.
+		6. Use the slider to pick a color you want to make the controls.
+		7. Once the slider is on the color you want, hit "Change Color"
